@@ -17,10 +17,6 @@ export default function TodoList(){
     }]);
 
     useEffect(() => {
-        console.info('localStorage : ', localStorage.getItem('USER_TOKEN'));
-    }, [localStorage]);
-
-    useEffect(() => {
         if(!localStorage.getItem('USER_TOKEN')){
             navigation(ROUTER.LOGIN);
             return;
@@ -46,7 +42,7 @@ export default function TodoList(){
             const res = await TodoService.createTodo({
                 todo: text,
             });
-            if(res.status===201){
+            if(res.status === 201){
                 getTodoList();
                 setText('');
             }else{
@@ -64,7 +60,7 @@ export default function TodoList(){
                 todo: updateTodo,
                 isCompleted: true,          //todoList[index].isCompleted,
             });
-            if(res.status===200){
+            if(res.status === 200){
                 getTodoList();
             }else{
                 console.info(res.status);
