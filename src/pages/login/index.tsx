@@ -19,33 +19,53 @@ export default function Login() {
     }, []);
 
     const handleSubmit = async () => {
-        try{
-            const res = await LoginService.signUp({
-                email,
-                password,
-            });
-            if(res.status===201){
-                console.info('res : ', res);
+        if(isValidCheck() === true) {
+            try{
+                const res = await LoginService.signUp({
+                    email,
+                    password,
+                });
+                if(res.status===201){
+                    console.info('res : ', res);
+                }
+            }catch(error){
+                console.log('error : ', error);
             }
-        }catch(error){
-            console.log('error : ', error);
+        }else{
+            return;
         }
     }
 
     const handleLogin = async () => {
-        try{
-            const res = await LoginService.signIn({
-                email,
-                password,
-            });
-
-            if(res.status === 200){     // 로그인 성공시, todo 페이지 이동 & 세션 저장
-                localStorage.setItem('USER_TOKEN', res.data.access_token);
-                navigation(ROUTER.TODO_LIST);
+        if(isValidCheck() === true) { 
+            try{
+                const res = await LoginService.signIn({
+                    email,
+                    password,
+                });
+    
+                if(res.status === 200){     // 로그인 성공시, todo 페이지 이동 & 세션 저장
+                    localStorage.setItem('USER_TOKEN', res.data.access_token);
+                    navigation(ROUTER.TODO_LIST);
+                }
+            } catch (error) { 
+                console.log('error : ', error)
+                
             }
-        } catch (error) { 
-            console.log('error : ', error)
-            
+        }else{
+            return;
+        }
+    }
+
+    //  유효성 검사 email '@' 포함, password 8자 이상
+    const isValidCheck = () => {
+        const isValidEmail = email.includes('@') ? true : false;
+        const isValidPwd = password.length >= 8 ? true : false;
+
+        if(isValidEmail && isValidPwd){ 
+            return true;
+        }else{
+            return false;
         }
     }
 
@@ -80,4 +100,5 @@ export default function Login() {
             </div>
         </>
     )
+
 };
